@@ -1,10 +1,13 @@
 
 <?php
+
 /* require the user as the parameter */
-if((isset($_GET['u']))&&((isset($_GET['p']) )) {
-    $format='json';
+if((isset($_GET['u']))&&(isset($_GET['p'])))
+  {
+   
 	/* soak in the passed variable or set our own */
 //	$number_of_posts = isset($_GET['num']) ? intval($_GET['num']) : 10; //10 is the default
+    //$format='json';
 	$format = strtolower($_GET['format']) == 'json' ? 'json' : 'xml'; //xml is the default
     $user_id = $_GET['u']; //no default
     $pass_id = $_GET['p']; //no default
@@ -14,8 +17,8 @@ if((isset($_GET['u']))&&((isset($_GET['p']) )) {
 	mysqli_select_db($link,'dblogin');// or die('Cannot select the DB');
 
 	/* grab the posts from the db */
-    $query = "SELECT * FROM `tbluser` WHERE `Userid` ='". $user_id ."'
-    AND password ='".$pass_id."'";
+    $query = "SELECT count(*) as c FROM `tbluser` WHERE `Userid` ='". $user_id ."'
+    AND password1 ='".$pass_id."'";
     //  ORDER BY ID DESC LIMIT $number_of_posts";
 	$result = mysqli_query($link,$query) or die('Errant query:  '.$query);
 
@@ -32,7 +35,7 @@ if((isset($_GET['u']))&&((isset($_GET['p']) )) {
 		header('Content-type: application/json');
 		echo json_encode(array('posts'=>$posts));
 	}
-	else {
+	else if($format == 'xml')  {
 		header('Content-type: text/xml');
 		echo '<posts>';
 		foreach($posts as $index => $post) {
